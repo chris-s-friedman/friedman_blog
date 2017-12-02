@@ -11,7 +11,7 @@ tags:
   - scraping
   - untappd
 slug: collecting-data-on-untappd
-draft: yes
+draft: true
 weight: 1
 ---
 
