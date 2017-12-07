@@ -5,7 +5,6 @@ date: '2017-11-29'
 slug: a-mission-statement
 categories: [about]
 tags: [mision_statement]
-draft: true
 ---
 
 On the left hand side of this page (or when you click the “About” button), I start with one sentence that gets at why I do many things I do. I love going on adventures and I love learning from data. 
