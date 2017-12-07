@@ -16,6 +16,8 @@ tags:
   - ratebeer
   - API
 draft: true
+output:
+  blogdown::html_page
 ---
 ```{r init, warning=FALSE, message=FALSE, echo=FALSE}
 library(knitr)
