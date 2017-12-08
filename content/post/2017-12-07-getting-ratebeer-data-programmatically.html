@@ -107,7 +107,6 @@ brewery_ids &lt;-  read_html(brewery_list_url) %&gt;%
 <div id="getting-all-the-beers" class="section level2">
 <h2>Getting ALL THE BEERS!</h2>
 <p>To iterate through the list, we’ll use <code>map()</code> and some functions from <code>jsonlite</code>, a package that can parse JSON. Then we’ll use <code>map()</code> to work through the levels of the response, from it’s highest level (“data”) down to the actual data frame (held in the named object, “items”).</p>
-<p>For the sake of not using up all 5000 of my API requests, I’ll only request the first 5 breweries.</p>
 <pre class="r"><code>brewery_beer_df &lt;- brewery_ids %&gt;% 
   map(function(brewer_id){
     Sys.sleep(1) # the API restricts to 1 request per second. 
