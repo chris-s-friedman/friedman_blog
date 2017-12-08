@@ -141,7 +141,6 @@ Now I have a list of brewery IDs that I can feed into `get_beers_from_brewer()`
 
 To iterate through the list, we'll use `map()` and some functions from `jsonlite`, a package that can parse JSON. Then we'll use `map()` to work through the levels of the response, from it's highest level ("data") down to the actual data frame (held in the named object, "items").
 
-For the sake of not using up all 5000 of my API requests, I'll only request the first 5 breweries. 
 
 ```{r, message=FALSE, warning=FALSE}
 brewery_beer_df <- brewery_ids %>% 
