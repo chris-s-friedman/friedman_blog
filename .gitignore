@@ -6,3 +6,5 @@ DEPRECATED
 friedman_blog.Rproj
 .DS_Store
 public
+.Renviron
+r
