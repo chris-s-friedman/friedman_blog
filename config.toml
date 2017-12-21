@@ -17,8 +17,8 @@ languageCode = "en-us"
 defaultContentLanguage = "en-us"
 title = "Chris Friedman"
 theme = "hugo-tranquilpeak-theme"
-# disqusShortname = "hugo-tranquilpeak-theme"
-# googleAnalytics = "UA-123-45"
+disqusShortname = "chris-s-friedman"
+googleAnalytics = "UA-111428441-1"
 paginate = 7
 canonifyurls = true
 
