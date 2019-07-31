@@ -14,7 +14,7 @@ tags:
   - purrr
 ---
 
-Every Friday, [five thirty eight](http://fivethirtyeight.com/) comes out with two logic, math, or probability based puzzles - one quick to solve and one that takes a long time to solve. Although I don't always get a chance to partake, thinking about them is always fun. 
+Every Friday, [five thirty eight](https://fivethirtyeight.com/) comes out with two logic, math, or probability based puzzles - one quick to solve and one that takes a long time to solve. Although I don't always get a chance to partake, thinking about them is always fun. 
 
 This week's quick puzzle related to a problem I'm trying to solve in the office, so I thought I would give this one a try. Taken from [their site](https://fivethirtyeight.com/features/how-often-does-the-senate-vote-in-palindromes/), the puzzle goes like this:
 
@@ -28,7 +28,7 @@ In addition to potentially helping solve a problem in the office, I figure this 
 
 <center>
 
-![](http://res.cloudinary.com/chrissfriedman/image/upload/v1517458326/drwho_allons_y_ruxxvw.gif)
+![](https://res.cloudinary.com/chrissfriedman/image/upload/v1517458326/drwho_allons_y_ruxxvw.gif)
 
 </center>
 
