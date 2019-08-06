@@ -1,0 +1,107 @@
+---
+title: Happy Little Accidents
+author: ''
+date: '2019-08-05'
+draft: true
+slug: happy-little-accidents
+categories:
+  - r
+tags:
+  - '#tidytuesday'
+  - r4ds
+  - five_thirty_eight
+  - dplyr
+  - tidyr
+keywords:
+  - tech
+---
+
+This morning, I just found out about [#tidytuesday](https://github.com/rfordatascience/tidytuesday) and I figured it would be a fun thing to play with. 
+
+For my first foray into tidytuesday, we have data on Bob Ross's paintings during his show. The data were compiled by fivethirtyeight and reported [here](https://fivethirtyeight.com/features/a-statistical-analysis-of-the-work-of-bob-ross/). 
+
+The data are available [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-08-06). On the info page for the data, they show how to load the data and give an example of some basic tidying. I'll do that below:
+
+```{r load_and_basic}
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+bob_ross <- 
+  readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-06/bob-ross.csv")
+
+# to clean up the episode information
+bob_ross <- 
+  bob_ross %>% 
+  janitor::clean_names() %>% 
+  separate(episode, into = c("season", "episode"), sep = "E") %>% 
+  mutate(season = str_extract(season, "[:digit:]+")) %>% 
+  mutate_at(vars(season, episode), as.integer)
+
+head(bob_ross)
+```
+
+There are a couple of paintings that are named the same thing. 
+
+```{r handling_name_issue}
+bob_ross <- 
+  bob_ross %>% 
+  group_by(title) %>%
+  mutate(title_count = 1:group_size(.)) %>% 
+  ungroup() %>% 
+  mutate(title = if_else(title_count > 1, paste(title, title_count), title)) %>% 
+  select(-title_count)
+```
+
+There are some columns that are relate to the frame the painting got put into and some columns that relate to elements inside each painting. Like the fivethirtyeight crew, I'm more interested in the elements inside the paintings as opposed to the frames, so i'll go ahead and drop those columns
+
+```{r drop_frame_cols}
+painting_data <- 
+  bob_ross %>% 
+  select(-contains("frame"))
+```
+
+In my professional work, I perform social network analysis, so let's go ahead and look at networks of elements in Bob Ross's paintings!
+
+
+# Networks of Bob Ross Paintings
+
+To get us looking at social networks, we first need to take the data from this wide format and turn it into an edge list. The edge list will connect each painting to every element that is inside it. From there, we can get a picture of what the network of paintings looks like!
+
+## Organizing the Edge List
+
+```{r make_edge_list}
+library(igraph)
+
+titles <- painting_data[["title"]]
+incidence_mat <- 
+  painting_data %>% 
+  select(-season, -episode, -title)
+
+incidence_mat <- as.matrix(incidence_mat)
+rownames(incidence_mat) <- titles
+
+incidence_graph <- 
+  graph_from_incidence_matrix(incidence_mat, )
+
+plot(incidence_graph)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
