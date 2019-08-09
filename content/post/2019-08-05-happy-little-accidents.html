@@ -1,0 +1,77 @@
+---
+title: Happy Little Accidents
+author: ''
+date: '2019-08-05'
+slug: happy-little-accidents
+categories:
+  - r
+tags:
+  - '#tidytuesday'
+  - r4ds
+  - five_thirty_eight
+  - dplyr
+  - tidyr
+keywords:
+  - tech
+---
+
+
+
+<p>This morning, I just found out about <a href="https://github.com/rfordatascience/tidytuesday">#tidytuesday</a> and I figured it would be a fun thing to play with.</p>
+<p>For my first foray into tidytuesday, we have data on Bob Ross’s paintings during his show. The data were compiled by fivethirtyeight and reported <a href="https://fivethirtyeight.com/features/a-statistical-analysis-of-the-work-of-bob-ross/">here</a>.</p>
+<p>The data are available <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-08-06">here</a>. On the info page for the data, they show how to load the data and give an example of some basic tidying. I’ll do that below:</p>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(tidyr)
+library(stringr)
+
+bob_ross &lt;- 
+  readr::read_csv(&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-08-06/bob-ross.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   EPISODE = col_character(),
+##   TITLE = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code># to clean up the episode information
+bob_ross &lt;- 
+  bob_ross %&gt;% 
+  janitor::clean_names() %&gt;% 
+  separate(episode, into = c(&quot;season&quot;, &quot;episode&quot;), sep = &quot;E&quot;) %&gt;% 
+  mutate(season = str_extract(season, &quot;[:digit:]+&quot;)) %&gt;% 
+  mutate_at(vars(season, episode), as.integer)
+
+head(bob_ross)</code></pre>
+<pre><code>## # A tibble: 6 x 70
+##   season episode title apple_frame aurora_borealis  barn beach  boat bridge
+##    &lt;int&gt;   &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1      1       1 &quot;\&quot;A…           0               0     0     0     0      0
+## 2      1       2 &quot;\&quot;M…           0               0     0     0     0      0
+## 3      1       3 &quot;\&quot;E…           0               0     0     0     0      0
+## 4      1       4 &quot;\&quot;W…           0               0     0     0     0      0
+## 5      1       5 &quot;\&quot;Q…           0               0     0     0     0      0
+## 6      1       6 &quot;\&quot;W…           0               0     0     0     0      0
+## # … with 61 more variables: building &lt;dbl&gt;, bushes &lt;dbl&gt;, cabin &lt;dbl&gt;,
+## #   cactus &lt;dbl&gt;, circle_frame &lt;dbl&gt;, cirrus &lt;dbl&gt;, cliff &lt;dbl&gt;,
+## #   clouds &lt;dbl&gt;, conifer &lt;dbl&gt;, cumulus &lt;dbl&gt;, deciduous &lt;dbl&gt;,
+## #   diane_andre &lt;dbl&gt;, dock &lt;dbl&gt;, double_oval_frame &lt;dbl&gt;, farm &lt;dbl&gt;,
+## #   fence &lt;dbl&gt;, fire &lt;dbl&gt;, florida_frame &lt;dbl&gt;, flowers &lt;dbl&gt;,
+## #   fog &lt;dbl&gt;, framed &lt;dbl&gt;, grass &lt;dbl&gt;, guest &lt;dbl&gt;,
+## #   half_circle_frame &lt;dbl&gt;, half_oval_frame &lt;dbl&gt;, hills &lt;dbl&gt;,
+## #   lake &lt;dbl&gt;, lakes &lt;dbl&gt;, lighthouse &lt;dbl&gt;, mill &lt;dbl&gt;, moon &lt;dbl&gt;,
+## #   mountain &lt;dbl&gt;, mountains &lt;dbl&gt;, night &lt;dbl&gt;, ocean &lt;dbl&gt;,
+## #   oval_frame &lt;dbl&gt;, palm_trees &lt;dbl&gt;, path &lt;dbl&gt;, person &lt;dbl&gt;,
+## #   portrait &lt;dbl&gt;, rectangle_3d_frame &lt;dbl&gt;, rectangular_frame &lt;dbl&gt;,
+## #   river &lt;dbl&gt;, rocks &lt;dbl&gt;, seashell_frame &lt;dbl&gt;, snow &lt;dbl&gt;,
+## #   snowy_mountain &lt;dbl&gt;, split_frame &lt;dbl&gt;, steve_ross &lt;dbl&gt;,
+## #   structure &lt;dbl&gt;, sun &lt;dbl&gt;, tomb_frame &lt;dbl&gt;, tree &lt;dbl&gt;, trees &lt;dbl&gt;,
+## #   triple_frame &lt;dbl&gt;, waterfall &lt;dbl&gt;, waves &lt;dbl&gt;, windmill &lt;dbl&gt;,
+## #   window_frame &lt;dbl&gt;, winter &lt;dbl&gt;, wood_framed &lt;dbl&gt;</code></pre>
