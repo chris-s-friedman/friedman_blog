@@ -16,6 +16,10 @@ keywords:
   - tech
 ---
 
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
 This morning, I just found out about [#tidytuesday](https://github.com/rfordatascience/tidytuesday) and I figured it would be a fun thing to play with. 
 
 For my first foray into tidytuesday, we have data on Bob Ross's paintings during his show. The data were compiled by fivethirtyeight and reported [here](https://fivethirtyeight.com/features/a-statistical-analysis-of-the-work-of-bob-ross/). 
