@@ -7,7 +7,7 @@ slug: happy-little-accidents
 categories:
   - r
 tags:
-  - '#tidytuesday'
+  - tidytuesday
   - r4ds
   - five_thirty_eight
   - dplyr
@@ -15,6 +15,10 @@ tags:
 keywords:
   - tech
 ---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
 
 This morning, I just found out about [#tidytuesday](https://github.com/rfordatascience/tidytuesday) and I figured it would be a fun thing to play with. 
 
