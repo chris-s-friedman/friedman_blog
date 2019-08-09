@@ -7,7 +7,7 @@ slug: happy-little-accidents
 categories:
   - r
 tags:
-  - '#tidytuesday'
+  - tidytuesday
   - r4ds
   - five_thirty_eight
   - dplyr
