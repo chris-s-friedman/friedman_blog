@@ -15,13 +15,13 @@ I've been playing around with the data science projects First I played with stoc
 
 Today, I'll be working through the second [codeacademy data science independant project: Watching the Stock Market]
 
-This is a continuation of my work on the [codeacademy data science independant project #2: Explore a Sample Database](https://discuss.codecademy.com/t/data-science-independent-project-2-explore-a-sample-database/419945). 
+This is a continuation of my work on the [codeacademy data science independant project #2: Explore a Sample Database](https://discuss.codecademy.com/t/data-science-independent-project-2-explore-a-sample-database/419945).
 
 The database for this project is related to a fictional music store. As you can see in the diagram of the image below, it's a little more complicated than the single table stocks database!
 
 ![database diagram](/post/2019-08-10-more-sql-rocking-out_files/sqlite-sample-database-color.jpg)
 
-Like the last project, this one is broken up into a sets of challenges. In an upcoming post, I'll examine the intermediate and advanced challenges 
+Like the last project, this one is broken up into a sets of challenges. In an upcoming post, I'll examine the intermediate and advanced challenges
 
 ```{r setup}
 library(DBI)
@@ -34,7 +34,7 @@ db = dbConnect(RSQLite::SQLite(), dbname = "../../data/Music Store - Chinook/chi
 
 ```{sql connection=db}
    SELECT track_list.TrackId,
-          name, 
+          name,
           -- copmute how many playlists each track is in
           COUNT(track_list.TrackId) AS playlist_count
      FROM playlist_track AS track_list
@@ -42,10 +42,10 @@ LEFT JOIN tracks
        ON track_list.TrackId = tracks.TrackId
        GROUP BY track_list.TrackId
    -- compare the count of each track to the max count
-   HAVING COUNT(track_list.TrackId) = 
+   HAVING COUNT(track_list.TrackId) =
           -- compute the max count here
-          (SELECT MAX(plist_counts.playlist_count) 
-            FROM (SELECT TrackId, COUNT(*) AS playlist_count 
+          (SELECT MAX(plist_counts.playlist_count)
+            FROM (SELECT TrackId, COUNT(*) AS playlist_count
                     FROM playlist_track
                 GROUP BY TrackId) AS plist_counts)
 ```
@@ -76,12 +76,12 @@ LEFT JOIN albums
  GROUP BY tracks.AlbumID
  ORDER BY album_revenue DESC;
 ```
-The most revenue generating album? Looks like it isn't even an album and more the first season of Battlestar Galactica! 
+The most revenue generating album? Looks like it isn't even an album and more the first season of Battlestar Galactica!
 
 Now what about Genre?
 ```{sql connection=db}
-   SELECT tracks.GenreId, 
-          genres.Name, 
+   SELECT tracks.GenreId,
+          genres.Name,
           SUM(invoice_items.UnitPrice * Quantity) AS genre_revenue
      FROM invoice_items
 LEFT JOIN tracks
@@ -92,20 +92,20 @@ LEFT JOIN genres
  ORDER BY genre_revenue DESC;
 ```
 
-The most revenue generating? Rock! 
+The most revenue generating? Rock!
 
 ## 3. Which countries have the highest sales revenue? What percent of total revenue does each country make up?
 
-In the last challenge, we examined how we can figure out which items in the database produce the most revenue and further which groups of items produce the most revenue. The conclusion from all of that being is that investing in more of those classes of items can produce more revenue. 
+In the last challenge, we examined how we can figure out which items in the database produce the most revenue and further which groups of items produce the most revenue. The conclusion from all of that being is that investing in more of those classes of items can produce more revenue.
 
 In this challenge we will use metadata about customers to examine where in the world (literally) the revenue comes from. As the challenge asks, what countries produce the most revenue? Importantly, we can get country daya from two different sources: customer country and billing country. I'm more curious about customer country, so we'll go there.
 
 ```{sql connection=db}
-   SELECT country, 
+   SELECT country,
           SUM(invoice_items.UnitPrice * Quantity) AS country_revenue,
-          ROUND(SUM(invoice_items.UnitPrice * Quantity) / 
+          ROUND(SUM(invoice_items.UnitPrice * Quantity) /
                 (SELECT SUM(invoice_items.UnitPrice * Quantity)
-                   FROM invoice_items) * 100, 
+                   FROM invoice_items) * 100,
                 2) AS percent_total_revenue
      FROM invoice_items
 LEFT JOIN invoices
@@ -116,18 +116,18 @@ LEFT JOIN customers
  ORDER BY country_revenue DESC;
 ```
 
-Well, there you have it! The US generated the most revenue out of all the countries - $523.06, which is 22.46% of total revenue. 
+Well, there you have it! The US generated the most revenue out of all the countries - $523.06, which is 22.46% of total revenue.
 
 ## 4. How many customers did each employee support, what is the average revenue for each sale, and what is their total sale?
 
-With this question, we are trying to get at how personnel impact revenue. 
+With this question, we are trying to get at how personnel impact revenue.
 
 How do employees interact with customers? How many customers is each employee helping?
 
 
 ```{sql connection=db}
    SELECT employees.FirstName,
-          employees.LastName, 
+          employees.LastName,
           COUNT(*) AS customers_helped
      FROM customers
 LEFT JOIN employees
@@ -135,7 +135,7 @@ LEFT JOIN employees
  GROUP BY SupportRepId
 ```
 
-Well, looks like they all help customers just about the same amount. 
+Well, looks like they all help customers just about the same amount.
 
 Okay, so now we know how customers are helped by the sales team, but how much do customers spend on average?
 
@@ -148,7 +148,7 @@ So now that we know how many customers each sales rep helps and the average amou
 
 ```{sql connection=db}
    SELECT employees.FirstName,
-          employees.LastName, 
+          employees.LastName,
           SUM(invoices.Total) AS total_revenue
      FROM invoices
 LEFT JOIN customers
@@ -158,4 +158,4 @@ LEFT JOIN employees
  GROUP BY customers.SupportRepId
 ```
 
-Well this just goes to show that interacting with more customers is at least related to total revenue generated by an employee. That said, with an N of 3, you can't really learn much. 
+Well this just goes to show that interacting with more customers is at least related to total revenue generated by an employee. That said, with an N of 3, you can't really learn much.

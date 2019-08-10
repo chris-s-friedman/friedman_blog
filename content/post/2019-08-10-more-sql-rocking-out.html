@@ -29,7 +29,7 @@ db = dbConnect(RSQLite::SQLite(), dbname = &quot;../../data/Music Store - Chinoo
 <div id="which-tracks-appeared-in-the-most-playlists-how-many-playlist-did-they-appear-in" class="section level2">
 <h2>1. Which tracks appeared in the most playlists? How many playlist did they appear in?</h2>
 <pre class="sql"><code>   SELECT track_list.TrackId,
-          name, 
+          name,
           -- copmute how many playlists each track is in
           COUNT(track_list.TrackId) AS playlist_count
      FROM playlist_track AS track_list
@@ -37,10 +37,10 @@ LEFT JOIN tracks
        ON track_list.TrackId = tracks.TrackId
        GROUP BY track_list.TrackId
    -- compare the count of each track to the max count
-   HAVING COUNT(track_list.TrackId) = 
+   HAVING COUNT(track_list.TrackId) =
           -- compute the max count here
-          (SELECT MAX(plist_counts.playlist_count) 
-            FROM (SELECT TrackId, COUNT(*) AS playlist_count 
+          (SELECT MAX(plist_counts.playlist_count)
+            FROM (SELECT TrackId, COUNT(*) AS playlist_count
                     FROM playlist_track
                 GROUP BY TrackId) AS plist_counts)</code></pre>
 <div class="knitsql-table">
@@ -257,8 +257,8 @@ LEFT JOIN albums
 </div>
 <p>The most revenue generating album? Looks like it isn’t even an album and more the first season of Battlestar Galactica!</p>
 <p>Now what about Genre?</p>
-<pre class="sql"><code>   SELECT tracks.GenreId, 
-          genres.Name, 
+<pre class="sql"><code>   SELECT tracks.GenreId,
+          genres.Name,
           SUM(invoice_items.UnitPrice * Quantity) AS genre_revenue
      FROM invoice_items
 LEFT JOIN tracks
@@ -337,11 +337,11 @@ LEFT JOIN genres
 <h2>3. Which countries have the highest sales revenue? What percent of total revenue does each country make up?</h2>
 <p>In the last challenge, we examined how we can figure out which items in the database produce the most revenue and further which groups of items produce the most revenue. The conclusion from all of that being is that investing in more of those classes of items can produce more revenue.</p>
 <p>In this challenge we will use metadata about customers to examine where in the world (literally) the revenue comes from. As the challenge asks, what countries produce the most revenue? Importantly, we can get country daya from two different sources: customer country and billing country. I’m more curious about customer country, so we’ll go there.</p>
-<pre class="sql"><code>   SELECT country, 
+<pre class="sql"><code>   SELECT country,
           SUM(invoice_items.UnitPrice * Quantity) AS country_revenue,
-          ROUND(SUM(invoice_items.UnitPrice * Quantity) / 
+          ROUND(SUM(invoice_items.UnitPrice * Quantity) /
                 (SELECT SUM(invoice_items.UnitPrice * Quantity)
-                   FROM invoice_items) * 100, 
+                   FROM invoice_items) * 100,
                 2) AS percent_total_revenue
      FROM invoice_items
 LEFT JOIN invoices
@@ -421,7 +421,7 @@ LEFT JOIN customers
 <p>With this question, we are trying to get at how personnel impact revenue.</p>
 <p>How do employees interact with customers? How many customers is each employee helping?</p>
 <pre class="sql"><code>   SELECT employees.FirstName,
-          employees.LastName, 
+          employees.LastName,
           COUNT(*) AS customers_helped
      FROM customers
 LEFT JOIN employees
@@ -477,7 +477,7 @@ LEFT JOIN employees
 </div>
 <p>So now that we know how many customers each sales rep helps and the average amount of money a customer spends in a single session, how much revenue is each employee responsible for?</p>
 <pre class="sql"><code>   SELECT employees.FirstName,
-          employees.LastName, 
+          employees.LastName,
           SUM(invoices.Total) AS total_revenue
      FROM invoices
 LEFT JOIN customers
