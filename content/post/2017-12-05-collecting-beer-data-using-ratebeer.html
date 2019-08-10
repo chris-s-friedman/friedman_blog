@@ -20,17 +20,19 @@ output:
   blogdown::html_page
 ---
 
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
 <p>A few months ago, I was talking with a friend of mine about the idea for this blog and how I wanted to use data science to explore beer. He suggested that I use the blog as well as beer to learn something new about where I live. So I ask, what can beer teach me about Philadelphia?</p>
 <div id="the-first-thing-i-need-data" class="section level2">
 <h2>The first thing I need? Data!</h2>
 <p>Oddly enough, it’s actually pretty challenging to get access to high quality, current beer data.</p>
-<p>I chose to use <a href="https://www.ratebeer.com/">RateBeer’s</a> data, mostly because they have an easily accessible <a href="https://www.ratebeer.com/api.asp">API</a>, and meet my needs better than anyone else. They also <a href="https://www.ratebeer.com/ratingsqa.asp">disclose</a> how they come to their average beer rating, allowing me to see what’s under the hood. In the footnotes, I briefly explain some alternatives<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>I chose to use <a href="https://www.ratebeer.com/">RateBeer’s</a> data, mostly because they have an easily accessible <a href="https://www.ratebeer.com/api.asp">API</a>, and meet my needs better than anyone else. They also <a href="https://www.ratebeer.com/ratingsqa.asp">disclose</a> how they come to their average beer rating, allowing me to see what’s under the hood. In the footnotes, I briefly explain some alternatives<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 </div>
 <div id="collecting-data" class="section level2">
 <h2>Collecting Data</h2>
-<p>I want to look at breweries in the area. Sadly, the RateBeer API doesn’t have a feature to search for breweries in the area. There is however, a way to query what beers a brewery makes. To get a list of beers a brewery makes though, I need to know what that brewery’s unique ID is. Easy enough to find. the URL for a brewery on RateBeer is of the form:</p>
+<p>I want to look at breweries in the area. Sadly, the RateBeer API doesn’t have a feature to search for breweries in the area. There is however, a way to query what beers a brewery makes.
+To get a list of beers a brewery makes though, I need to know what that brewery’s unique ID is. Easy enough to find. the URL for a brewery on RateBeer is of the form:</p>
 <p><code>https://www.ratebeer.com/brewers/&lt;BREWERY_NAME_HERE&gt;/&lt;BREWER_ID_HERE&gt;</code></p>
 <p>So, as an example, <code>166</code> is the ID for <a href="https://www.ratebeer.com/brewers/yards-brewing-company/166/">Yards Brewering Company</a>. The url is:</p>
 <p><code>https://www.ratebeer.com/brewers/yards-brewing-company/166/</code></p>
@@ -64,7 +66,8 @@ output:
 <p>Now that I know what format to make my request in, it’s time to actually get my first bit of data off the API!</p>
 <div id="hello-httr" class="section level3">
 <h3>Hello, httr</h3>
-<p><a href="https://github.com/r-lib/httr"><code>httr</code></a> is a package developed by Hadley Wickham of RStudio to make it easy to make HTTP requests. the package and the nuances of HTTP wont be gone into here, but some good resources for httr include the <a href="https://cran.r-project.org/web/packages/httr/vignettes/quickstart.html">quickstart vignette</a>, and Bradley Boehmke’s <a href="http://bradleyboehmke.github.io/2016/01/scraping-via-apis.html#httr_api">post</a> on using httr. The httr syntax is quite simple. The main functions are curl verbs (httr is a wrapper for <a href="https://github.com/jeroen/curl">curl</a> functions), and the function arguments all start with the URL and are then followed by things to modify the URL and to send with the URL.</p>
+<p><a href="https://github.com/r-lib/httr"><code>httr</code></a> is a package developed by Hadley Wickham of RStudio to make it easy to make HTTP requests. the package and the nuances of HTTP wont be gone into here, but some good resources for httr include the <a href="https://cran.r-project.org/web/packages/httr/vignettes/quickstart.html">quickstart vignette</a>, and Bradley Boehmke’s <a href="http://bradleyboehmke.github.io/2016/01/scraping-via-apis.html#httr_api">post</a> on using httr.
+The httr syntax is quite simple. The main functions are curl verbs (httr is a wrapper for <a href="https://github.com/jeroen/curl">curl</a> functions), and the function arguments all start with the URL and are then followed by things to modify the URL and to send with the URL.</p>
 <p>RateBeer’s API is at <code>https://api.ratebeer.com/v1/api/graphql</code>. In the header of the request, content type and response type are required along with an API key. The query itself modifies the URL to call. So, my call to the RateBeer API to get the beers made by yards looks like this:</p>
 <pre class="r"><code>library(httr)
 
@@ -111,7 +114,7 @@ parsed_json &lt;- fromJSON(json, flatten = TRUE)</code></pre>
 beer_df &lt;- parsed_json$data$beersByBrewer$items
 
 beer_count</code></pre>
-<pre><code>## [1] 111</code></pre>
+<pre><code>## [1] 126</code></pre>
 <pre class="r"><code>kable(beer_df, &quot;html&quot;) %&gt;%
   kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;))</code></pre>
 <table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
@@ -146,16 +149,16 @@ Yards IPA
 7.0
 </td>
 <td style="text-align:right;">
-3.484764
+3.487598
 </td>
 <td style="text-align:right;">
-446
+452
 </td>
 <td style="text-align:left;">
 FALSE
 </td>
 <td style="text-align:left;">
-India Pale Ale (IPA)
+IPA
 </td>
 </tr>
 <tr>
@@ -166,16 +169,16 @@ Yards Philadelphia Pale Ale
 4.6
 </td>
 <td style="text-align:right;">
-3.086773
+3.087262
 </td>
 <td style="text-align:right;">
-388
+402
 </td>
 <td style="text-align:left;">
 FALSE
 </td>
 <td style="text-align:left;">
-American Pale Ale
+Pale Ale - American / APA
 </td>
 </tr>
 <tr>
@@ -186,10 +189,10 @@ Yards General Washington’s Tavern Porter
 7.0
 </td>
 <td style="text-align:right;">
-3.407142
+3.414651
 </td>
 <td style="text-align:right;">
-363
+373
 </td>
 <td style="text-align:left;">
 FALSE
@@ -206,16 +209,16 @@ Yards Thomas Jefferson’s Tavern Ale
 8.0
 </td>
 <td style="text-align:right;">
-3.386615
+3.384788
 </td>
 <td style="text-align:right;">
-346
+350
 </td>
 <td style="text-align:left;">
 FALSE
 </td>
 <td style="text-align:left;">
-American Strong Ale
+Strong Ale - American
 </td>
 </tr>
 <tr>
@@ -226,16 +229,16 @@ Yards Extra Special Ale (ESA)
 6.3
 </td>
 <td style="text-align:right;">
-3.313450
+3.312626
 </td>
 <td style="text-align:right;">
-345
+344
 </td>
 <td style="text-align:left;">
 FALSE
 </td>
 <td style="text-align:left;">
-Premium Bitter/ESB
+Bitter - Premium / Strong / ESB
 </td>
 </tr>
 <tr>
@@ -246,10 +249,10 @@ Yards Brawler
 4.2
 </td>
 <td style="text-align:right;">
-3.114447
+3.123125
 </td>
 <td style="text-align:right;">
-310
+322
 </td>
 <td style="text-align:left;">
 FALSE
@@ -266,10 +269,10 @@ Yards Love Stout
 5.5
 </td>
 <td style="text-align:right;">
-3.373255
+3.373304
 </td>
 <td style="text-align:right;">
-276
+284
 </td>
 <td style="text-align:left;">
 FALSE
@@ -286,16 +289,16 @@ Yards Poor Richard’s Tavern Spruce
 5.0
 </td>
 <td style="text-align:right;">
-3.281156
+3.281131
 </td>
 <td style="text-align:right;">
-225
+230
 </td>
 <td style="text-align:left;">
 FALSE
 </td>
 <td style="text-align:left;">
-Spice/Herb/Vegetable
+Flavored - Other
 </td>
 </tr>
 <tr>
@@ -306,7 +309,7 @@ Yards Saison (pre-2009)
 4.7
 </td>
 <td style="text-align:right;">
-2.999833
+3.009691
 </td>
 <td style="text-align:right;">
 203
@@ -315,7 +318,7 @@ Yards Saison (pre-2009)
 TRUE
 </td>
 <td style="text-align:left;">
-Saison
+Saison / Farmhouse / Grisette
 </td>
 </tr>
 <tr>
@@ -326,16 +329,16 @@ Yards Saison (2009-)
 6.5
 </td>
 <td style="text-align:right;">
-3.320755
+3.326367
 </td>
 <td style="text-align:right;">
-150
+159
 </td>
 <td style="text-align:left;">
 FALSE
 </td>
 <td style="text-align:left;">
-Saison
+Saison / Farmhouse / Grisette
 </td>
 </tr>
 </tbody>
@@ -354,6 +357,6 @@ Saison
 <li><strong><a href="https://openbeerdb.com/">Open Beer Database</a></strong> hasn’t updated the database since 2011. That’s a solid no.</li>
 <li><strong><a href="http://www.thebeerspot.com/">The Beer Spot</a></strong> looks like it could be a fun community, but considering that A), <a href="http://www.thebeerspot.com/forum/index.php/topic,17296.msg728792.html#msg728792">they may not have very many users</a> and B) no one has <a href="http://www.thebeerspot.com/beer/info/yuengling-brewery/yuengling-traditional-lager">reviewd Yuengling</a> (beer geek or not, a Philadelphia area staple) I’m not going to use their API.</li>
 </ul>
-<a href="#fnref1">↩</a></li>
+<a href="#fnref1" class="footnote-back">↩</a></li>
 </ol>
 </div>
