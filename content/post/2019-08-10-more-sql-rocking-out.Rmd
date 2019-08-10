@@ -11,7 +11,7 @@ keywords:
   - tech
 ---
 
-I've been playing around with the data science projects First I played with stocks data [here](../../07/creating-a-stocks-database/) and [here](../../07/working-with-stocks-basic-sql).
+I've been playing around with the data science projects from codeacademy for a few weeks. First I played with stocks data [here](../../07/creating-a-stocks-database/) and [here](../../07/working-with-stocks-basic-sql).
 
 Today, I'll be working through the second [codeacademy data science independant project: Watching the Stock Market]
 
@@ -35,7 +35,7 @@ db = dbConnect(RSQLite::SQLite(), dbname = "../../data/Music Store - Chinook/chi
 ```{sql connection=db}
    SELECT track_list.TrackId,
           name,
-          -- copmute how many playlists each track is in
+          -- compute how many playlists each track is in
           COUNT(track_list.TrackId) AS playlist_count
      FROM playlist_track AS track_list
 LEFT JOIN tracks
