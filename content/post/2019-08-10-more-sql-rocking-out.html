@@ -45,7 +45,7 @@ LEFT JOIN tracks
                 GROUP BY TrackId) AS plist_counts)</code></pre>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:basic1">Table 1: </span>Displaying records 1 - 10</caption>
+<caption><span id="tab:unnamed-chunk-1">Table 1: </span>Displaying records 1 - 10</caption>
 <thead>
 <tr class="header">
 <th align="right">TrackId</th>
@@ -111,9 +111,310 @@ LEFT JOIN tracks
 </div>
 <div id="which-track-generated-the-most-revenue-which-album-which-genre" class="section level2">
 <h2>2. Which track generated the most revenue? which album? which genre?</h2>
+<pre class="sql"><code>   SELECT invoice_items.TrackId, Name, SUM(invoice_items.UnitPrice * Quantity) AS track_revenue
+     FROM invoice_items
+LEFT JOIN tracks
+       ON invoice_items.TrackId = tracks.TrackId
+ GROUP BY invoice_items.TrackId
+ ORDER BY track_revenue DESC;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 2: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="right">TrackId</th>
+<th align="left">Name</th>
+<th align="right">track_revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2832</td>
+<td align="left">The Woman King</td>
+<td align="right">3.98</td>
+</tr>
+<tr class="even">
+<td align="right">2850</td>
+<td align="left">The Fix</td>
+<td align="right">3.98</td>
+</tr>
+<tr class="odd">
+<td align="right">2868</td>
+<td align="left">Walkabout</td>
+<td align="right">3.98</td>
+</tr>
+<tr class="even">
+<td align="right">3177</td>
+<td align="left">Hot Girl</td>
+<td align="right">3.98</td>
+</tr>
+<tr class="odd">
+<td align="right">3200</td>
+<td align="left">Gay Witch Hunt</td>
+<td align="right">3.98</td>
+</tr>
+<tr class="even">
+<td align="right">3214</td>
+<td align="left">Phyllis’s Wedding</td>
+<td align="right">3.98</td>
+</tr>
+<tr class="odd">
+<td align="right">3223</td>
+<td align="left">How to Stop an Exploding Man</td>
+<td align="right">3.98</td>
+</tr>
+<tr class="even">
+<td align="right">3250</td>
+<td align="left">Pilot</td>
+<td align="right">3.98</td>
+</tr>
+<tr class="odd">
+<td align="right">2820</td>
+<td align="left">Occupation / Precipice</td>
+<td align="right">1.99</td>
+</tr>
+<tr class="even">
+<td align="right">2821</td>
+<td align="left">Exodus, Pt. 1</td>
+<td align="right">1.99</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So we can see that the top 8 tracks above garnered the most revenue. I didn’t look these up, but I don’t recognize any of them ¯\<em>(ツ)</em>/¯.</p>
+<p>What about Albums? Which ALbum garnered the most revenue?</p>
+<pre class="sql"><code>   SELECT tracks.AlbumID, Title, SUM(invoice_items.UnitPrice * Quantity) AS album_revenue
+     FROM invoice_items
+LEFT JOIN tracks
+       ON invoice_items.TrackId = tracks.TrackId
+LEFT JOIN albums
+       ON tracks.AlbumID = albums.AlbumID
+ GROUP BY tracks.AlbumID
+ ORDER BY album_revenue DESC;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 3: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="right">AlbumId</th>
+<th align="left">Title</th>
+<th align="right">album_revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">253</td>
+<td align="left">Battlestar Galactica (Classic), Season 1</td>
+<td align="right">35.82</td>
+</tr>
+<tr class="even">
+<td align="right">251</td>
+<td align="left">The Office, Season 3</td>
+<td align="right">31.84</td>
+</tr>
+<tr class="odd">
+<td align="right">23</td>
+<td align="left">Minha Historia</td>
+<td align="right">26.73</td>
+</tr>
+<tr class="even">
+<td align="right">228</td>
+<td align="left">Heroes, Season 1</td>
+<td align="right">25.87</td>
+</tr>
+<tr class="odd">
+<td align="right">231</td>
+<td align="left">Lost, Season 2</td>
+<td align="right">25.87</td>
+</tr>
+<tr class="even">
+<td align="right">141</td>
+<td align="left">Greatest Hits</td>
+<td align="right">25.74</td>
+</tr>
+<tr class="odd">
+<td align="right">73</td>
+<td align="left">Unplugged</td>
+<td align="right">24.75</td>
+</tr>
+<tr class="even">
+<td align="right">227</td>
+<td align="left">Battlestar Galactica, Season 3</td>
+<td align="right">23.88</td>
+</tr>
+<tr class="odd">
+<td align="right">229</td>
+<td align="left">Lost, Season 3</td>
+<td align="right">21.89</td>
+</tr>
+<tr class="even">
+<td align="right">224</td>
+<td align="left">Acústico</td>
+<td align="right">21.78</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The most revenue generating album? Looks like it isn’t even an album and more the first season of Battlestar Galactica!</p>
+<p>Now what about Genre?</p>
+<pre class="sql"><code>   SELECT tracks.GenreId, 
+          genres.Name, 
+          SUM(invoice_items.UnitPrice * Quantity) AS genre_revenue
+     FROM invoice_items
+LEFT JOIN tracks
+       ON invoice_items.TrackId = tracks.TrackId
+LEFT JOIN genres
+       ON tracks.GenreId = genres.GenreId
+ GROUP BY tracks.GenreId
+ ORDER BY genre_revenue DESC;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-4">Table 4: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="right">GenreId</th>
+<th align="left">Name</th>
+<th align="right">genre_revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">Rock</td>
+<td align="right">826.65</td>
+</tr>
+<tr class="even">
+<td align="right">7</td>
+<td align="left">Latin</td>
+<td align="right">382.14</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">Metal</td>
+<td align="right">261.36</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">Alternative &amp; Punk</td>
+<td align="right">241.56</td>
+</tr>
+<tr class="odd">
+<td align="right">19</td>
+<td align="left">TV Shows</td>
+<td align="right">93.53</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">Jazz</td>
+<td align="right">79.20</td>
+</tr>
+<tr class="odd">
+<td align="right">6</td>
+<td align="left">Blues</td>
+<td align="right">60.39</td>
+</tr>
+<tr class="even">
+<td align="right">21</td>
+<td align="left">Drama</td>
+<td align="right">57.71</td>
+</tr>
+<tr class="odd">
+<td align="right">14</td>
+<td align="left">R&amp;B/Soul</td>
+<td align="right">40.59</td>
+</tr>
+<tr class="even">
+<td align="right">24</td>
+<td align="left">Classical</td>
+<td align="right">40.59</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The most revenue generating? Rock!</p>
 </div>
 <div id="which-countries-have-the-highest-sales-revenue-what-percent-of-total-revenue-does-each-country-make-up" class="section level2">
 <h2>3. Which countries have the highest sales revenue? What percent of total revenue does each country make up?</h2>
+<p>In the last challenge, we examined how we can figure out which items in the database produce the most revenue and further which groups of items produce the most revenue. The conclusion from all of that being is that investing in more of those classes of items can produce more revenue.</p>
+<p>In this challenge we will use metadata about customers to examine where in the world (literally) the revenue comes from. As the challenge asks, what countries produce the most revenue? Importantly, we can get country daya from two different sources: customer country and billing country. I’m more curious about customer country, so we’ll go there.</p>
+<pre class="sql"><code>   SELECT country, 
+          SUM(invoice_items.UnitPrice * Quantity) AS country_revenue,
+          ROUND(SUM(invoice_items.UnitPrice * Quantity) / 
+                (SELECT SUM(invoice_items.UnitPrice * Quantity)
+                   FROM invoice_items) * 100, 
+                2) AS percent_total_revenue
+     FROM invoice_items
+LEFT JOIN invoices
+       ON invoice_items.InvoiceId = invoices.InvoiceId
+LEFT JOIN customers
+       ON invoices.CustomerId = customers.CustomerId
+ GROUP BY country
+ ORDER BY country_revenue DESC;</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-5">Table 5: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">Country</th>
+<th align="right">country_revenue</th>
+<th align="right">percent_total_revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">USA</td>
+<td align="right">523.06</td>
+<td align="right">22.46</td>
+</tr>
+<tr class="even">
+<td align="left">Canada</td>
+<td align="right">303.96</td>
+<td align="right">13.05</td>
+</tr>
+<tr class="odd">
+<td align="left">France</td>
+<td align="right">195.10</td>
+<td align="right">8.38</td>
+</tr>
+<tr class="even">
+<td align="left">Brazil</td>
+<td align="right">190.10</td>
+<td align="right">8.16</td>
+</tr>
+<tr class="odd">
+<td align="left">Germany</td>
+<td align="right">156.48</td>
+<td align="right">6.72</td>
+</tr>
+<tr class="even">
+<td align="left">United Kingdom</td>
+<td align="right">112.86</td>
+<td align="right">4.85</td>
+</tr>
+<tr class="odd">
+<td align="left">Czech Republic</td>
+<td align="right">90.24</td>
+<td align="right">3.88</td>
+</tr>
+<tr class="even">
+<td align="left">Portugal</td>
+<td align="right">77.24</td>
+<td align="right">3.32</td>
+</tr>
+<tr class="odd">
+<td align="left">India</td>
+<td align="right">75.26</td>
+<td align="right">3.23</td>
+</tr>
+<tr class="even">
+<td align="left">Chile</td>
+<td align="right">46.62</td>
+<td align="right">2.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Well, there you have it! The US generated the most revenue out of all the countries - $523.06, which is 22.46% of total revenue.</p>
 </div>
 <div id="how-many-customers-did-each-employee-support-what-is-the-average-revenue-for-each-sale-and-what-is-their-total-sale" class="section level2">
 <h2>4. How many customers did each employee support, what is the average revenue for each sale, and what is their total sale?</h2>
