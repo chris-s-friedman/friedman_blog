@@ -13,7 +13,7 @@ keywords:
 
 
 
-<p>I’ve been playing around with the data science projects First I played with stocks data <a href="../../07/creating-a-stocks-database/">here</a> and <a href="../../07/working-with-stocks-basic-sql">here</a>.</p>
+<p>I’ve been playing around with the data science projects from codeacademy for a few weeks. First I played with stocks data <a href="../../07/creating-a-stocks-database/">here</a> and <a href="../../07/working-with-stocks-basic-sql">here</a>.</p>
 <p>Today, I’ll be working through the second [codeacademy data science independant project: Watching the Stock Market]</p>
 <p>This is a continuation of my work on the <a href="https://discuss.codecademy.com/t/data-science-independent-project-2-explore-a-sample-database/419945">codeacademy data science independant project #2: Explore a Sample Database</a>.</p>
 <p>The database for this project is related to a fictional music store. As you can see in the diagram of the image below, it’s a little more complicated than the single table stocks database!</p>
@@ -30,7 +30,7 @@ db = dbConnect(RSQLite::SQLite(), dbname = &quot;../../data/Music Store - Chinoo
 <h2>1. Which tracks appeared in the most playlists? How many playlist did they appear in?</h2>
 <pre class="sql"><code>   SELECT track_list.TrackId,
           name,
-          -- copmute how many playlists each track is in
+          -- compute how many playlists each track is in
           COUNT(track_list.TrackId) AS playlist_count
      FROM playlist_track AS track_list
 LEFT JOIN tracks
