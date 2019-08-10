@@ -89,6 +89,18 @@ canonifyurls = true
   name = "Stack Overflow"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-stack-overflow\"></i>"
   url = "https://stackoverflow.com/users/5975765/christopher-friedman"
+[[menu.links]]
+  weight = 3
+  identifier = "linkedin"
+  name = "Linkedin"
+  pre = "<i class=\"sidebar-button-icon fa fa-lg fa-linkedin\"></i>"
+  url = "https://www.linkedin.com/in/christopher-friedman-36265664/"
+  [[menu.links]]
+  weight = 4
+  identifier = "resume"
+  name = "Resume"
+  pre = "<i class=\"sidebar-button-icon fa fa-lg fa-file-text-o\"></i>"
+  url = "https://res.cloudinary.com/chrissfriedman/image/upload/v1565403939/resume/Friedman_Chris_-_Resume.pdf"
 
 [[menu.misc]]
   weight = 1
