@@ -1,0 +1,139 @@
+---
+title: More SQL - Rocking Out
+author: ''
+date: '2019-08-10'
+slug: more-sql-rocking-out
+categories:
+  - sql
+tags:
+  - sql
+keywords:
+  - tech
+---
+
+
+
+<p>I’ve been playing around with the data science projects First I played with stocks data <a href="../../07/creating-a-stocks-database/">here</a> and <a href="../../07/working-with-stocks-basic-sql">here</a>.</p>
+<p>Today, I’ll be working through the second [codeacademy data science independant project: Watching the Stock Market]</p>
+<p>This is a continuation of my work on the <a href="https://discuss.codecademy.com/t/data-science-independent-project-2-explore-a-sample-database/419945">codeacademy data science independant project #2: Explore a Sample Database</a>.</p>
+<p>The database for this project is related to a fictional music store. As you can see in the diagram of the image below, it’s a little more complicated than the single table stocks database!</p>
+<div class="figure">
+<img src="/post/2019-08-10-more-sql-rocking-out_files/sqlite-sample-database-color.jpg" alt="database diagram" />
+<p class="caption">database diagram</p>
+</div>
+<p>Like the last project, this one is broken up into a set of basic challenges, intermediate challenges and advanced challenges.</p>
+<pre class="r"><code>library(DBI)
+db = dbConnect(RSQLite::SQLite(), dbname = &quot;../../data/Music Store - Chinook/chinook.db&quot;)</code></pre>
+<div id="basic-challenges" class="section level1">
+<h1>Basic Challenges</h1>
+<div id="which-tracks-appeared-in-the-most-playlists-how-many-playlist-did-they-appear-in" class="section level2">
+<h2>1. Which tracks appeared in the most playlists? How many playlist did they appear in?</h2>
+<pre class="sql"><code>   SELECT track_list.TrackId,
+          name, 
+          -- copmute how many playlists each track is in
+          COUNT(track_list.TrackId) AS playlist_count
+     FROM playlist_track AS track_list
+LEFT JOIN tracks
+       ON track_list.TrackId = tracks.TrackId
+       GROUP BY track_list.TrackId
+   -- compare the count of each track to the max count
+   HAVING COUNT(track_list.TrackId) = 
+          -- compute the max count here
+          (SELECT MAX(plist_counts.playlist_count) 
+            FROM (SELECT TrackId, COUNT(*) AS playlist_count 
+                    FROM playlist_track
+                GROUP BY TrackId) AS plist_counts)</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:basic1">Table 1: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="right">TrackId</th>
+<th align="left">Name</th>
+<th align="right">playlist_count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">3403</td>
+<td align="left">Intoitus: Adorate Deum</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="right">3404</td>
+<td align="left">Miserere mei, Deus</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="right">3408</td>
+<td align="left">Aria Mit 30 Veränderungen, BWV 988 “Goldberg Variations”: Aria</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="right">3409</td>
+<td align="left">Suite for Solo Cello No. 1 in G Major, BWV 1007: I. Prélude</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="right">3410</td>
+<td align="left">The Messiah: Behold, I Tell You a Mystery… The Trumpet Shall Sound</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="right">3411</td>
+<td align="left">Solomon HWV 67: The Arrival of the Queen of Sheba</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="right">3415</td>
+<td align="left">Symphony No.5 in C Minor: I. Allegro con brio</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="right">3416</td>
+<td align="left">Ave Maria</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="right">3417</td>
+<td align="left">Nabucco: Chorus, “Va, Pensiero, Sull’ali Dorate”</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="right">3418</td>
+<td align="left">Die Walküre: The Ride of the Valkyries</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Putting this together required using two tables - playlist_track, which connects TrackId to PlaylistId and the tracks table, which has information about each song. The playlist_track table has a row for each track - playlist combination. By counting how many times a track shows up in this table, we get a count of how many playlists that track is in. Then if you filter the playlist_track table so that it only shows the tracks that show up the max number of times, you see the tracks that are in the most playlists. The last bit that needs to be done after that is to bring in the track name, as I did with the <code>LEFT JOIN</code>.</p>
+</div>
+<div id="which-track-generated-the-most-revenue-which-album-which-genre" class="section level2">
+<h2>2. Which track generated the most revenue? which album? which genre?</h2>
+</div>
+<div id="which-countries-have-the-highest-sales-revenue-what-percent-of-total-revenue-does-each-country-make-up" class="section level2">
+<h2>3. Which countries have the highest sales revenue? What percent of total revenue does each country make up?</h2>
+</div>
+<div id="how-many-customers-did-each-employee-support-what-is-the-average-revenue-for-each-sale-and-what-is-their-total-sale" class="section level2">
+<h2>4. How many customers did each employee support, what is the average revenue for each sale, and what is their total sale?</h2>
+</div>
+</div>
+<div id="intermediate-challenge" class="section level1">
+<h1>Intermediate Challenge</h1>
+<div id="do-longer-or-shorter-length-albums-tend-to-generate-more-revenue" class="section level2">
+<h2>1. Do longer or shorter length albums tend to generate more revenue?</h2>
+<pre><code>    Hint: We can use the WITH clause to create a temporary table that determines the number of tracks in each album, then group by the length of the album to compare the average revenue generated for each.</code></pre>
+</div>
+<div id="is-the-number-of-times-a-track-appear-in-any-playlist-a-good-indicator-of-sales" class="section level2">
+<h2>2. Is the number of times a track appear in any playlist a good indicator of sales?</h2>
+<pre><code>    Hint: We can use the WITH clause to create a temporary table that determines the number of times each track appears in a playlist, then group by the number of times to compare the average revenue generated for each.</code></pre>
+</div>
+</div>
+<div id="advanced-challenge" class="section level1">
+<h1>Advanced Challenge</h1>
+<div id="how-much-revenue-is-generated-each-year-and-what-is-its-percent-change-4-from-the-previous-year" class="section level2">
+<h2>1. How much revenue is generated each year, and what is its percent change 4 from the previous year?</h2>
+<pre><code>    Hint: The InvoiceDate field is formatted as ‘yyyy-mm-dd hh:mm:ss’. Try taking a look at using the strftime() function to help extract just the year. Then, we can use a subquery in the SELECT statement to query the total revenue from the previous year. Remember that strftime() returns the date as a string, so we would need to CAST it to an integer type for this part. Finally, since we cannot refer to a column alias in the SELECT statement, it may be useful to use the WITH clause to query the previous year total in a temporary table, and then calculate the percent change in the final SELECT statement.</code></pre>
+</div>
+</div>

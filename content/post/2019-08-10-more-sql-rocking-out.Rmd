@@ -1,0 +1,71 @@
+---
+title: More SQL - Rocking Out
+author: ''
+date: '2019-08-10'
+slug: more-sql-rocking-out
+categories:
+  - sql
+tags:
+  - sql
+keywords:
+  - tech
+---
+
+I've been playing around with the data science projects First I played with stocks data [here](../../07/creating-a-stocks-database/) and [here](../../07/working-with-stocks-basic-sql).
+
+Today, I'll be working through the second [codeacademy data science independant project: Watching the Stock Market]
+
+This is a continuation of my work on the [codeacademy data science independant project #2: Explore a Sample Database](https://discuss.codecademy.com/t/data-science-independent-project-2-explore-a-sample-database/419945). 
+
+The database for this project is related to a fictional music store. As you can see in the diagram of the image below, it's a little more complicated than the single table stocks database!
+
+![database diagram](/post/2019-08-10-more-sql-rocking-out_files/sqlite-sample-database-color.jpg)
+
+Like the last project, this one is broken up into a set of basic challenges, intermediate challenges and advanced challenges. 
+
+```{r setup}
+library(DBI)
+db = dbConnect(RSQLite::SQLite(), dbname = "../../data/Music Store - Chinook/chinook.db")
+```
+
+# Basic Challenges
+
+## 1. Which tracks appeared in the most playlists? How many playlist did they appear in?
+
+```{sql basic1, connection=db}
+   SELECT track_list.TrackId,
+          name, 
+          -- copmute how many playlists each track is in
+          COUNT(track_list.TrackId) AS playlist_count
+     FROM playlist_track AS track_list
+LEFT JOIN tracks
+       ON track_list.TrackId = tracks.TrackId
+       GROUP BY track_list.TrackId
+   -- compare the count of each track to the max count
+   HAVING COUNT(track_list.TrackId) = 
+          -- compute the max count here
+          (SELECT MAX(plist_counts.playlist_count) 
+            FROM (SELECT TrackId, COUNT(*) AS playlist_count 
+                    FROM playlist_track
+                GROUP BY TrackId) AS plist_counts)
+```
+
+Putting this together required using two tables - playlist_track, which connects TrackId to PlaylistId and the tracks table, which has information about each song. The playlist_track table has a row for each track - playlist combination. By counting how many times a track shows up in this table, we get a count of how many playlists that track is in. Then if you filter the playlist_track table so that it only shows the tracks that show up the max number of times, you see the tracks that are in the most playlists. The last bit that needs to be done after that is to bring in the track name, as I did with the `LEFT JOIN`.
+
+## 2. Which track generated the most revenue? which album? which genre?
+
+## 3. Which countries have the highest sales revenue? What percent of total revenue does each country make up?
+
+## 4. How many customers did each employee support, what is the average revenue for each sale, and what is their total sale?
+
+# Intermediate Challenge
+
+## 1. Do longer or shorter length albums tend to generate more revenue?
+        Hint: We can use the WITH clause to create a temporary table that determines the number of tracks in each album, then group by the length of the album to compare the average revenue generated for each.
+## 2. Is the number of times a track appear in any playlist a good indicator of sales?
+        Hint: We can use the WITH clause to create a temporary table that determines the number of times each track appears in a playlist, then group by the number of times to compare the average revenue generated for each.
+
+# Advanced Challenge
+
+## 1. How much revenue is generated each year, and what is its percent change 4 from the previous year?
+        Hint: The InvoiceDate field is formatted as ‘yyyy-mm-dd hh:mm:ss’. Try taking a look at using the strftime() function to help extract just the year. Then, we can use a subquery in the SELECT statement to query the total revenue from the previous year. Remember that strftime() returns the date as a string, so we would need to CAST it to an integer type for this part. Finally, since we cannot refer to a column alias in the SELECT statement, it may be useful to use the WITH clause to query the previous year total in a temporary table, and then calculate the percent change in the final SELECT statement.
