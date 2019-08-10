@@ -1,6 +1,7 @@
 ---
 title: Rocking Out on SQL - More Exploring
 author: ''
+draft: true
 date: '2019-08-10'
 slug: rocking-out-on-sql-more-exploring
 categories:
