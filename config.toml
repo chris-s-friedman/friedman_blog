@@ -95,12 +95,18 @@ canonifyurls = true
   name = "Linkedin"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-linkedin\"></i>"
   url = "https://www.linkedin.com/in/christopher-friedman-36265664/"
-  [[menu.links]]
+[[menu.links]]
   weight = 4
   identifier = "resume"
   name = "Resume"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-file-text-o\"></i>"
   url = "https://res.cloudinary.com/chrissfriedman/image/upload/v1565403939/resume/Friedman_Chris_-_Resume.pdf"
+[[menu.links]]
+  weight = 5
+  identifier = "cv"
+  name = "CV Website"
+  pre = "<i class=\"sidebar-button-icon fa fa-lg fa-id-badge\"></i>"
+  url = "https://cv.chris-s-friedman.com"
 
 [[menu.misc]]
   weight = 1
