@@ -32,7 +32,7 @@ canonifyurls = true
 
 [author]
   name = "Chris Friedman"
-  bio = "I go on adventures and analyze data. This site is home to some projects I've done and some of my thoughts on how I can bring those two to interests together."
+  bio = "I go on adventures and analyze data. When I'm away from my desk I make beer and build things with wood. "
   job = "Data Analyst at Drexel University"
   location = "Philadelphia, PA"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
