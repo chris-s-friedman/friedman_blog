@@ -100,7 +100,7 @@ canonifyurls = true
   identifier = "resume"
   name = "Resume"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-file-text-o\"></i>"
-  url = "https://res.cloudinary.com/chrissfriedman/image/upload/v1565403939/resume/Friedman_Chris_-_Resume.pdf"
+  url = "https://cv.chris-s-friedman.com/files/Friedman_Resume.pdf"
 [[menu.links]]
   weight = 5
   identifier = "cv"
